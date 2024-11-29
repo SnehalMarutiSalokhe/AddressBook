@@ -8,4 +8,8 @@ public class AddressBook {
         adressesBk.add(c1);
         System.out.println("Contact is added");
     }
+
+    public void display(){
+        System.out.println(adressesBk);
+    }
 }

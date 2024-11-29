@@ -12,7 +12,8 @@ public class Main {
             System.out.println("""
                 Enter 1 to create contact
                 Enter 2 to display all contacts
-                Enter 3 to edit an existing contact""");
+                Enter 3 to edit an existing contact
+                Enter 4 to delete a contact""");
             int choice = sc.nextInt();
             switch (choice) {
                 case 1 -> createContact(a1);
@@ -22,15 +23,19 @@ public class Main {
                     String firstName = sc.next();
                     a1.editContact(firstName);
                 }
+                case 4 -> {
+                    System.out.println("Enter the first name of the contact to delete:");
+                    String firstName = sc.next();
+                    a1.deleteContact(firstName);
+                }
                 default -> System.out.println("Wrong input");
             }
 
             System.out.println("Enter 0 to exit");
             isExit = sc.nextInt();
-
+            System.out.println("Exiting from Address Book...");
         } while (isExit != 0);
 
-        System.out.println("Exiting from Address Book...");
         System.out.println("Thank you for using Address Book.");
         sc.close();
     }

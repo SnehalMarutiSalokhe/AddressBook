@@ -13,7 +13,8 @@ public class Main {
                 Enter 1 to create contact
                 Enter 2 to display all contacts
                 Enter 3 to edit an existing contact
-                Enter 4 to delete a contact""");
+                Enter 4 to delete a contact
+                Enter 5 to add multiple contacts""");
             int choice = sc.nextInt();
             switch (choice) {
                 case 1 -> createContact(a1);
@@ -28,6 +29,7 @@ public class Main {
                     String firstName = sc.next();
                     a1.deleteContact(firstName);
                 }
+                case 5 -> addMultipleContacts(a1);
                 default -> System.out.println("Wrong input");
             }
 
@@ -58,5 +60,17 @@ public class Main {
         int zip = sc.nextInt();
         Contact c1 = new Contact(firstName, lastName, city, state, email, phone, zip);
         a1.addContact(c1);
+    }
+
+    static void addMultipleContacts(AddressBook a1) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("How many contacts do you want to add?");
+        int numberOfContacts = sc.nextInt();
+
+        for (int i = 0; i < numberOfContacts; i++) {
+            System.out.println("Adding contact " + (i + 1));
+            createContact(a1);
+        }
+        System.out.println(numberOfContacts + " contacts added successfully!");
     }
 }

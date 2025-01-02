@@ -12,14 +12,18 @@ public class AddressBook {
     }
 
     public void display() {
-        System.out.println(addressesBk);
+        if (addressesBk.isEmpty()) {
+            System.out.println("Address Book is empty.");
+        } else {
+            for (Contact c : addressesBk) {
+                System.out.println(c);
+            }
+        }
     }
 
     public void editContact(String firstName) {
-        boolean contactFound = false;
         for (Contact c : addressesBk) {
             if (c.firstName.equalsIgnoreCase(firstName)) {
-                contactFound = true;
                 Scanner sc = new Scanner(System.in);
                 System.out.println("Enter new last name:");
                 c.lastName = sc.next();
@@ -33,27 +37,15 @@ public class AddressBook {
                 c.phone = sc.nextInt();
                 System.out.println("Enter new zip:");
                 c.zip = sc.nextInt();
-                System.out.println("Contact details updated successfully.");
-                break;
+                System.out.println("Contact updated successfully.");
+                return;
             }
         }
-        if (!contactFound) {
-            System.out.println("No contact found with the given name.");
-        }
+        System.out.println("Contact not found.");
     }
 
     public void deleteContact(String firstName) {
-        boolean contactFound = false;
-        for (int i = 0; i < addressesBk.size(); i++) {
-            if (addressesBk.get(i).firstName.equalsIgnoreCase(firstName)) {
-                contactFound = true;
-                addressesBk.remove(i);
-                System.out.println("Contact removed successfully.");
-                break;
-            }
-        }
-        if (!contactFound) {
-            System.out.println("No contact found with the given name.");
-        }
+        addressesBk.removeIf(c -> c.firstName.equalsIgnoreCase(firstName));
+        System.out.println("Contact deleted successfully.");
     }
 }

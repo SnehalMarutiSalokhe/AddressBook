@@ -1,10 +1,67 @@
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Welcome to Address Book!");
+        System.out.println("Welcome to Address Book System!");
 
-        AddressBook a1 = new AddressBook();
+        Map<String, AddressBook> addressBookSystem = new HashMap<>();
+        Scanner sc = new Scanner(System.in);
+
+        int isExit = 1;
+        do {
+            System.out.println("""
+                Enter 1 to create a new Address Book
+                Enter 2 to select an existing Address Book
+                Enter 3 to display all Address Book names""");
+            int choice = sc.nextInt();
+            sc.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1 -> createAddressBook(addressBookSystem);
+                case 2 -> selectAddressBook(addressBookSystem);
+                case 3 -> displayAllAddressBooks(addressBookSystem);
+                default -> System.out.println("Invalid choice. Please try again.");
+            }
+
+            System.out.println("Enter 0 to exit");
+            isExit = sc.nextInt();
+            sc.nextLine(); // Consume newline
+            System.out.println("Exiting Address Book System...");
+        } while (isExit != 0);
+
+        System.out.println("Thank you for using the Address Book System.");
+        sc.close();
+    }
+
+    static void createAddressBook(Map<String, AddressBook> system) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter a unique name for the new Address Book:");
+        String addressBookName = sc.nextLine();
+
+        if (system.containsKey(addressBookName)) {
+            System.out.println("An Address Book with this name already exists. Try another name.");
+        } else {
+            system.put(addressBookName, new AddressBook());
+            System.out.println("Address Book '" + addressBookName + "' created successfully!");
+        }
+    }
+
+    static void selectAddressBook(Map<String, AddressBook> system) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the name of the Address Book to select:");
+        String addressBookName = sc.nextLine();
+
+        if (system.containsKey(addressBookName)) {
+            AddressBook selectedAddressBook = system.get(addressBookName);
+            manageAddressBook(selectedAddressBook);
+        } else {
+            System.out.println("Address Book with this name does not exist.");
+        }
+    }
+
+    static void manageAddressBook(AddressBook a1) {
         Scanner sc = new Scanner(System.in);
 
         int isExit = 1;
@@ -33,13 +90,10 @@ public class Main {
                 default -> System.out.println("Wrong input");
             }
 
-            System.out.println("Enter 0 to exit");
+            System.out.println("Enter 0 to return to main menu");
             isExit = sc.nextInt();
-            System.out.println("Exiting from Address Book...");
+            sc.nextLine(); // Consume newline
         } while (isExit != 0);
-
-        System.out.println("Thank you for using Address Book.");
-        sc.close();
     }
 
     static void createContact(AddressBook a1) {
@@ -72,5 +126,16 @@ public class Main {
             createContact(a1);
         }
         System.out.println(numberOfContacts + " contacts added successfully!");
+    }
+
+    static void displayAllAddressBooks(Map<String, AddressBook> system) {
+        if (system.isEmpty()) {
+            System.out.println("No Address Books found in the system.");
+        } else {
+            System.out.println("List of Address Books:");
+            for (String name : system.keySet()) {
+                System.out.println("- " + name);
+            }
+        }
     }
 }

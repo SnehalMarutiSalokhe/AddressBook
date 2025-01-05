@@ -1,6 +1,5 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,6 +15,7 @@ public class Main {
                 Enter 1 to create a new Address Book
                 Enter 2 to select an existing Address Book
                 Enter 3 to display all Address Book names
+                Enter 4 to search persons by City or State
                 Enter 0 to exit""");
             choice = sc.nextInt();
             sc.nextLine(); // Consume newline
@@ -27,6 +27,7 @@ public class Main {
                     System.out.println("Available Address Books:");
                     addressBookSystem.keySet().forEach(System.out::println);
                 }
+                case 4 -> searchByCityOrState(addressBookSystem);
                 case 0 -> System.out.println("Exiting Address Book System...");
                 default -> System.out.println("Invalid choice. Please try again.");
             }
@@ -115,5 +116,46 @@ public class Main {
         int zip = sc.nextInt();
         Contact c1 = new Contact(firstName, lastName, city, state, email, phone, zip);
         a1.addContact(c1);
+    }
+
+    static void searchByCityOrState(Map<String, AddressBook> system) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("""
+                Enter 1 to search by City
+                Enter 2 to search by State""");
+        int searchChoice = sc.nextInt();
+        sc.nextLine(); // Consume newline
+
+        List<Contact> results;
+
+        switch (searchChoice) {
+            case 1 -> {
+                System.out.println("Enter the City to search:");
+                String city = sc.nextLine();
+                results = system.values().stream()
+                        .flatMap(addressBook -> addressBook.getContacts().stream())
+                        .filter(contact -> contact.city.equalsIgnoreCase(city))
+                        .collect(Collectors.toList());
+            }
+            case 2 -> {
+                System.out.println("Enter the State to search:");
+                String state = sc.nextLine();
+                results = system.values().stream()
+                        .flatMap(addressBook -> addressBook.getContacts().stream())
+                        .filter(contact -> contact.state.equalsIgnoreCase(state))
+                        .collect(Collectors.toList());
+            }
+            default -> {
+                System.out.println("Invalid choice. Returning to main menu...");
+                return;
+            }
+        }
+
+        if (results.isEmpty()) {
+            System.out.println("No contacts found for the given search criteria.");
+        } else {
+            System.out.println("Search Results:");
+            results.forEach(System.out::println);
+        }
     }
 }

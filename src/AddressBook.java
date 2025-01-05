@@ -4,7 +4,23 @@ import java.util.Scanner;
 
 public class AddressBook {
 
+    private String addressBookName;
     List<Contact> addressesBk = new ArrayList<>();
+
+    private List<Contact> contacts;
+
+    public AddressBook(String addressBookName) {
+        this.addressBookName = addressBookName;
+        this.contacts = new ArrayList<>();
+    }
+
+
+
+    public String getAddressBookName() {
+        return this.addressBookName;
+    }
+
+
 
     public void addContact(Contact c1) {
         addressesBk.add(c1);

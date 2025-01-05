@@ -20,6 +20,7 @@ public class Main {
                 Enter 4 to search persons by City or State
                 Enter 5 to view persons by City or State
                 Enter 6 to count persons by City or State
+                Enter 7 to sort entries by Person's name
                 Enter 0 to exit""");
             choice = sc.nextInt();
             sc.nextLine(); // Consume newline
@@ -34,6 +35,7 @@ public class Main {
                 case 4 -> searchByCityOrState(addressBookSystem);
                 case 5 -> viewPersonsByCityOrState(cityMap, stateMap);
                 case 6 -> countPersonsByCityOrState(cityMap, stateMap);
+                case 7 -> sortEntriesByName(addressBookSystem);
                 case 0 -> System.out.println("Exiting Address Book System...");
                 default -> System.out.println("Invalid choice. Please try again.");
             }
@@ -48,11 +50,12 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter a unique name for the new Address Book:");
         String addressBookName = sc.nextLine();
+        AddressBook a1 = new AddressBook(addressBookName);
 
         if (system.containsKey(addressBookName)) {
             System.out.println("An Address Book with this name already exists. Try another name.");
         } else {
-            system.put(addressBookName, new AddressBook());
+            system.put(addressBookName, a1);
             System.out.println("Address Book '" + addressBookName + "' created successfully!");
         }
     }
@@ -81,6 +84,7 @@ public class Main {
                 Enter 2 to display all contacts
                 Enter 3 to edit an existing contact
                 Enter 4 to delete a contact
+                Enter 5 to sort entries by name
                 Enter 0 to return to main menu""");
             choice = sc.nextInt();
 
@@ -97,6 +101,7 @@ public class Main {
                     String firstName = sc.next();
                     a1.deleteContact(firstName);
                 }
+                case 5 -> sortEntriesByName(Collections.singletonMap(a1.getAddressBookName(), a1));
                 case 0 -> System.out.println("Returning to main menu...");
                 default -> System.out.println("Invalid choice. Please try again.");
             }
@@ -130,6 +135,20 @@ public class Main {
 
         stateMap.putIfAbsent(state, new ArrayList<>());
         stateMap.get(state).add(c1);
+    }
+
+    static void sortEntriesByName(Map<String, AddressBook> addressBookSystem) {
+        for (Map.Entry<String, AddressBook> entry : addressBookSystem.entrySet()) {
+            AddressBook addressBook = entry.getValue();
+
+            // Sort the entries alphabetically by name using Java Streams
+            List<Contact> sortedContacts = addressBook.getContacts().stream()
+                    .sorted(Comparator.comparing(Contact::getFullName))
+                    .toList();
+
+            System.out.println("Sorted Address Book (" + entry.getKey() + "):");
+            sortedContacts.forEach(System.out::println);
+        }
     }
 
     static void searchByCityOrState(Map<String, AddressBook> system) {

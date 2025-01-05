@@ -19,6 +19,7 @@ public class Main {
                 Enter 3 to display all Address Book names
                 Enter 4 to search persons by City or State
                 Enter 5 to view persons by City or State
+                Enter 6 to count persons by City or State
                 Enter 0 to exit""");
             choice = sc.nextInt();
             sc.nextLine(); // Consume newline
@@ -32,6 +33,7 @@ public class Main {
                 }
                 case 4 -> searchByCityOrState(addressBookSystem);
                 case 5 -> viewPersonsByCityOrState(cityMap, stateMap);
+                case 6 -> countPersonsByCityOrState(cityMap, stateMap);
                 case 0 -> System.out.println("Exiting Address Book System...");
                 default -> System.out.println("Invalid choice. Please try again.");
             }
@@ -203,6 +205,31 @@ public class Main {
                     System.out.println("Persons in state " + state + ":");
                     contacts.forEach(System.out::println);
                 }
+            }
+            default -> System.out.println("Invalid choice. Returning to main menu...");
+        }
+    }
+
+    static void countPersonsByCityOrState(Map<String, List<Contact>> cityMap, Map<String, List<Contact>> stateMap) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("""
+                Enter 1 to count persons by City
+                Enter 2 to count persons by State""");
+        int choice = sc.nextInt();
+        sc.nextLine(); // Consume newline
+
+        switch (choice) {
+            case 1 -> {
+                System.out.println("Enter the City to count persons:");
+                String city = sc.nextLine();
+                long count = cityMap.getOrDefault(city, Collections.emptyList()).size();
+                System.out.println("Number of persons in city " + city + ": " + count);
+            }
+            case 2 -> {
+                System.out.println("Enter the State to count persons:");
+                String state = sc.nextLine();
+                long count = stateMap.getOrDefault(state, Collections.emptyList()).size();
+                System.out.println("Number of persons in state " + state + ": " + count);
             }
             default -> System.out.println("Invalid choice. Returning to main menu...");
         }

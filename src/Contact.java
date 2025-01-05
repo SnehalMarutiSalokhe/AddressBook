@@ -9,6 +9,7 @@ public class Contact {
     int phone;
     int zip;
 
+
     public Contact(String firstName, String lastName, String city, String state, String email, int phone, int zip) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -19,18 +20,17 @@ public class Contact {
         this.zip = zip;
     }
 
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;  // Full name as a combination of first and last name
+    }
+
+    // Override toString method for better print format
     @Override
     public String toString() {
-        return "Contact{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", city='" + city + '\'' +
-                ", state='" + state + '\'' +
-                ", email='" + email + '\'' +
-                ", phone=" + phone +
-                ", zip=" + zip +
-                '}';
+        return String.format("Name: %s %s, City: %s, State: %s, Email: %s, Phone: %d",
+                firstName, lastName, city, state, email, phone);
     }
+
 
     // Override equals for duplicate check based on firstName and lastName
     @Override

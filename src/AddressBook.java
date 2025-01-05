@@ -12,13 +12,11 @@ public class AddressBook {
     }
 
     public void display() {
-        if (addressesBk.isEmpty()) {
-            System.out.println("Address Book is empty.");
-        } else {
-            for (Contact c : addressesBk) {
-                System.out.println(c);
-            }
-        }
+        System.out.println(addressesBk);
+    }
+
+    public List<Contact> getContacts() {
+        return addressesBk;
     }
 
     public void editContact(String firstName) {
@@ -37,11 +35,11 @@ public class AddressBook {
                 c.phone = sc.nextInt();
                 System.out.println("Enter new zip:");
                 c.zip = sc.nextInt();
-                System.out.println("Contact updated successfully.");
+                System.out.println("Contact details updated successfully.");
                 return;
             }
         }
-        System.out.println("Contact not found.");
+        System.out.println("No contact found with the given name.");
     }
 
     public void deleteContact(String firstName) {

@@ -1,6 +1,5 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -9,27 +8,31 @@ public class Main {
         Map<String, AddressBook> addressBookSystem = new HashMap<>();
         Scanner sc = new Scanner(System.in);
 
-        int isExit = 1;
+        int choice; // Define choice variable before the loop
+
         do {
             System.out.println("""
                 Enter 1 to create a new Address Book
                 Enter 2 to select an existing Address Book
-                Enter 3 to display all Address Book names""");
-            int choice = sc.nextInt();
+                Enter 3 to display all Address Book names
+                Enter 4 to search persons by City or State
+                Enter 0 to exit""");
+            choice = sc.nextInt();
             sc.nextLine(); // Consume newline
 
             switch (choice) {
                 case 1 -> createAddressBook(addressBookSystem);
                 case 2 -> selectAddressBook(addressBookSystem);
-                case 3 -> displayAllAddressBooks(addressBookSystem);
+                case 3 -> {
+                    System.out.println("Available Address Books:");
+                    addressBookSystem.keySet().forEach(System.out::println);
+                }
+                case 4 -> searchByCityOrState(addressBookSystem);
+                case 0 -> System.out.println("Exiting Address Book System...");
                 default -> System.out.println("Invalid choice. Please try again.");
             }
 
-            System.out.println("Enter 0 to exit");
-            isExit = sc.nextInt();
-            sc.nextLine(); // Consume newline
-            System.out.println("Exiting Address Book System...");
-        } while (isExit != 0);
+        } while (choice != 0);
 
         System.out.println("Thank you for using the Address Book System.");
         sc.close();
@@ -64,15 +67,17 @@ public class Main {
     static void manageAddressBook(AddressBook a1) {
         Scanner sc = new Scanner(System.in);
 
-        int isExit = 1;
+        int choice; // Local variable for menu choices in AddressBook
+
         do {
             System.out.println("""
                 Enter 1 to create contact
                 Enter 2 to display all contacts
                 Enter 3 to edit an existing contact
                 Enter 4 to delete a contact
-                Enter 5 to add multiple contacts""");
-            int choice = sc.nextInt();
+                Enter 0 to return to main menu""");
+            choice = sc.nextInt();
+
             switch (choice) {
                 case 1 -> createContact(a1);
                 case 2 -> a1.display();
@@ -86,14 +91,11 @@ public class Main {
                     String firstName = sc.next();
                     a1.deleteContact(firstName);
                 }
-                case 5 -> addMultipleContacts(a1);
-                default -> System.out.println("Wrong input");
+                case 0 -> System.out.println("Returning to main menu...");
+                default -> System.out.println("Invalid choice. Please try again.");
             }
 
-            System.out.println("Enter 0 to return to main menu");
-            isExit = sc.nextInt();
-            sc.nextLine(); // Consume newline
-        } while (isExit != 0);
+        } while (choice != 0);
     }
 
     static void createContact(AddressBook a1) {
@@ -116,26 +118,44 @@ public class Main {
         a1.addContact(c1);
     }
 
-    static void addMultipleContacts(AddressBook a1) {
+    static void searchByCityOrState(Map<String, AddressBook> system) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("How many contacts do you want to add?");
-        int numberOfContacts = sc.nextInt();
+        System.out.println("""
+                Enter 1 to search by City
+                Enter 2 to search by State""");
+        int searchChoice = sc.nextInt();
+        sc.nextLine(); // Consume newline
 
-        for (int i = 0; i < numberOfContacts; i++) {
-            System.out.println("Adding contact " + (i + 1));
-            createContact(a1);
-        }
-        System.out.println(numberOfContacts + " contacts added successfully!");
-    }
+        List<Contact> results;
 
-    static void displayAllAddressBooks(Map<String, AddressBook> system) {
-        if (system.isEmpty()) {
-            System.out.println("No Address Books found in the system.");
-        } else {
-            System.out.println("List of Address Books:");
-            for (String name : system.keySet()) {
-                System.out.println("- " + name);
+        switch (searchChoice) {
+            case 1 -> {
+                System.out.println("Enter the City to search:");
+                String city = sc.nextLine();
+                results = system.values().stream()
+                        .flatMap(addressBook -> addressBook.getContacts().stream())
+                        .filter(contact -> contact.city.equalsIgnoreCase(city))
+                        .collect(Collectors.toList());
             }
+            case 2 -> {
+                System.out.println("Enter the State to search:");
+                String state = sc.nextLine();
+                results = system.values().stream()
+                        .flatMap(addressBook -> addressBook.getContacts().stream())
+                        .filter(contact -> contact.state.equalsIgnoreCase(state))
+                        .collect(Collectors.toList());
+            }
+            default -> {
+                System.out.println("Invalid choice. Returning to main menu...");
+                return;
+            }
+        }
+
+        if (results.isEmpty()) {
+            System.out.println("No contacts found for the given search criteria.");
+        } else {
+            System.out.println("Search Results:");
+            results.forEach(System.out::println);
         }
     }
 }
